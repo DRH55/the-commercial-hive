@@ -17,7 +17,11 @@ export default function RootLayout({ children }) {
           <footer className="border-t border-line px-6 py-10 mt-10">
             <div className="max-w-[1120px] mx-auto flex justify-between items-center flex-wrap gap-4">
               <span className="font-display font-semibold text-sm">The Commercial Hive</span>
-              <p className="text-[12.5px] text-charcoal-soft">thecommercialhive.com</p>
+              <p className="text-[12.5px] text-charcoal-soft">
+                <a href="mailto:contact@thecommercialhive.com" className="hover:text-charcoal">contact@thecommercialhive.com</a>
+                <span className="mx-2">·</span>
+                thecommercialhive.com
+              </p>
             </div>
           </footer>
         </AuthProvider>
