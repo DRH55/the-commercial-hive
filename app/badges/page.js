@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Award, Star, Flame, MessageSquare, Layers, Trophy, FileText } from "lucide-react";
+import { Award, Star, Flame, MessageSquare, Layers, Trophy, ShieldCheck } from "lucide-react";
 
 const ACHIEVEMENT_BADGES = [
   { icon: Star, name: "First Step", desc: "Made your first contribution", how: "Submit an article, respond to a challenge, or reply in a discussion." },
-  { icon: FileText, name: "Applicant", desc: "Applied to become a contributor", how: "Submit an application on the Apply to Contribute page." },
   { icon: Flame, name: "Sharp Thinker", desc: "Submitted 3 challenge responses", how: "Take on 3 commercial scenarios in the Challenges section." },
   { icon: MessageSquare, name: "In The Room", desc: "Posted 3 discussion replies", how: "Join the conversation on 3 discussion threads." },
   { icon: Layers, name: "Well Rounded", desc: "Contributed across 2+ categories", how: "Write articles or take challenges spanning at least two practice areas (e.g. Corporate and Technology)." },
@@ -38,11 +37,7 @@ export default function BadgesPage() {
               <div>
                 <div className="font-display font-semibold text-[15px]">{b.name}</div>
                 <div className="text-[12.5px] text-charcoal-soft mt-1">{b.desc}</div>
-                <div className="text-[12.5px] text-charcoal mt-2">
-                  {b.name === "Applicant" ? (
-                    <>Submit an application on the <Link href="/apply" className="text-amber font-semibold">Apply to Contribute</Link> page.</>
-                  ) : b.how}
-                </div>
+                <div className="text-[12.5px] text-charcoal mt-2">{b.how}</div>
               </div>
             </div>
           ))}
@@ -66,6 +61,18 @@ export default function BadgesPage() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="mt-12">
+        <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium mb-2.5">Platform Role</div>
+        <h2 className="text-xl">Editor badge</h2>
+        <div className="card flex gap-3 items-center mt-5 max-w-[480px]">
+          <ShieldCheck size={18} className="text-amber flex-shrink-0" />
+          <div>
+            <div className="font-display font-semibold text-[15px]">Editor</div>
+            <div className="text-[12.5px] text-charcoal-soft mt-0.5">Reviews and publishes submissions. Not an achievement to unlock — it's shown only on Hive editors' profiles.</div>
+          </div>
         </div>
       </div>
 

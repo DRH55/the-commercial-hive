@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Printer, Share2, ChevronRight, Award, Flame, Linkedin } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
-import { categoryLabel, BADGES, computeEarnedBadges } from "@/lib/data";
+import { categoryLabel, BADGES, EDITOR_BADGE, computeEarnedBadges, externalUrl } from "@/lib/data";
 import Avatar from "../../components/Avatar";
 
 export default function ContributorProfilePage() {
@@ -13,7 +13,6 @@ export default function ContributorProfilePage() {
   const [articles, setArticles] = useState([]);
   const [responses, setResponses] = useState([]);
   const [replies, setReplies] = useState([]);
-  const [applications, setApplications] = useState([]);
 
   useEffect(() => {
     supabase.from("profiles").select("*").eq("id", id).single().then(({ data }) => setProfile(data));
@@ -21,12 +20,13 @@ export default function ContributorProfilePage() {
     supabase.from("challenge_responses").select("*, challenges(category_id)").eq("user_id", id).then(({ data }) =>
       setResponses((data || []).map((r) => ({ ...r, category_id: r.challenges?.category_id }))));
     supabase.from("discussion_replies").select("*").eq("author_id", id).then(({ data }) => setReplies(data || []));
-    supabase.from("applications").select("*").eq("user_id", id).then(({ data }) => setApplications(data || []));
   }, [id]);
 
   if (!profile) return <div className="max-w-[700px] mx-auto px-6 py-16 text-charcoal-soft">Loading…</div>;
 
-  const earned = computeEarnedBadges({ articles, responses, replies, applications, contributorTier: profile.contributor_tier });
+  const isEditor = profile.site_role === "editor";
+  const earned = computeEarnedBadges({ articles, responses, replies, contributorTier: profile.contributor_tier, siteRole: profile.site_role });
+  const visibleBadges = isEditor ? [EDITOR_BADGE, ...BADGES] : BADGES;
 
   return (
     <section className="max-w-[1120px] mx-auto px-6 py-16 print:py-4">
@@ -54,7 +54,7 @@ export default function ContributorProfilePage() {
 
       {profile.linkedin_url && (
         <a
-          href={profile.linkedin_url}
+          href={externalUrl(profile.linkedin_url)}
           target="_blank"
           rel="noopener noreferrer"
           className="card card-clickable flex items-center gap-3 mt-5 max-w-[320px] print:hidden"
@@ -94,7 +94,7 @@ export default function ContributorProfilePage() {
       <div className="mt-9 max-w-[700px]">
         <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium">Badges</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
-          {BADGES.map((b) => {
+          {visibleBadges.map((b) => {
             const isEarned = earned.has(b.id);
             return (
               <div key={b.id} className={`card text-center py-4 ${isEarned ? "" : "opacity-40"}`}>

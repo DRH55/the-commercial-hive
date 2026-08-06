@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogIn, Printer, Share2, Award } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
-import { BADGES, computeEarnedBadges } from "@/lib/data";
+import { BADGES, EDITOR_BADGE, computeEarnedBadges, externalUrl } from "@/lib/data";
 import { useAuth } from "../components/AuthProvider";
 import Avatar from "../components/Avatar";
 
@@ -33,7 +33,7 @@ export default function ProfilePage() {
   async function handleSave() {
     setSaving(true);
     await supabase.from("profiles").update({
-      name: form.name, bio: form.bio, goals: form.goals, university: form.university, course: form.course, linkedin_url: form.linkedin_url,
+      name: form.name, bio: form.bio, goals: form.goals, university: form.university, course: form.course, linkedin_url: externalUrl(form.linkedin_url),
     }).eq("id", user.id);
     setSaving(false);
     refreshProfile();
@@ -65,7 +65,9 @@ export default function ProfilePage() {
   }
 
   if (!form) return null;
-  const earned = computeEarnedBadges({ ...activity, contributorTier: profile.contributor_tier });
+  const isEditor = profile.site_role === "editor";
+  const earned = computeEarnedBadges({ ...activity, contributorTier: profile.contributor_tier, siteRole: profile.site_role });
+  const visibleBadges = isEditor ? [EDITOR_BADGE, ...BADGES] : BADGES;
 
   return (
     <section className="max-w-[1120px] mx-auto px-6 py-16 print:py-4">
@@ -133,7 +135,7 @@ export default function ProfilePage() {
           <Link href="/badges" className="text-amber text-[12.5px] font-semibold">How badges work</Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
-          {BADGES.map((b) => {
+          {visibleBadges.map((b) => {
             const isEarned = earned.has(b.id);
             return (
               <div key={b.id} className={`card text-center py-4 ${isEarned ? "" : "opacity-40"}`}>
