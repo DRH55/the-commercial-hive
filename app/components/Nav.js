@@ -12,7 +12,6 @@ const LINKS = [
   { href: "/challenges", label: "Challenges" },
   { href: "/discussions", label: "Discussions" },
   { href: "/contributors", label: "Contributors" },
-  { href: "/careers", label: "Careers" },
 ];
 
 export default function Nav() {

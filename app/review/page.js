@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { CheckCircle2, XCircle, ShieldCheck, UserPlus } from "lucide-react";
+import Link from "next/link";
+import { CheckCircle2, XCircle, ShieldCheck, UserPlus, ListChecks } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { categoryLabel } from "@/lib/data";
 import { useAuth } from "../components/AuthProvider";
@@ -55,8 +56,15 @@ export default function ReviewQueuePage() {
   return (
     <section className="max-w-[1120px] mx-auto px-6 py-16">
       <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium mb-2.5">Editor Tools</div>
-      <h1 className="text-[30px]">Review Queue</h1>
-      <p className="mt-2.5 text-charcoal-soft max-w-[560px]">Approving here publishes the piece to Commercial News immediately.</p>
+      <div className="flex justify-between items-start flex-wrap gap-3">
+        <div>
+          <h1 className="text-[30px]">Review Queue</h1>
+          <p className="mt-2.5 text-charcoal-soft max-w-[560px]">Approving here publishes the piece to Commercial News immediately.</p>
+        </div>
+        <Link href="/review/challenges" className="btn-ghost inline-flex items-center gap-1.5">
+          <ListChecks size={14} /> Manage Challenges
+        </Link>
+      </div>
 
       {applications.length > 0 && (
         <div className="mt-8 max-w-[700px]">
