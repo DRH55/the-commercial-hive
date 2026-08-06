@@ -4,6 +4,7 @@ import { MessageSquare, Send, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { CATEGORIES } from "@/lib/data";
 import { useAuth } from "../components/AuthProvider";
+import LikeButton from "../components/LikeButton";
 import { useRouter } from "next/navigation";
 
 export default function DiscussionsPage() {
@@ -109,6 +110,9 @@ export default function DiscussionsPage() {
                 <div>
                   <div className="text-[12.5px] font-semibold">{r.profiles?.name}</div>
                   <div className="text-[13.5px] text-charcoal-soft mt-1">{r.body}</div>
+                  <div className="mt-1.5">
+                    <LikeButton table="reply_likes" column="reply_id" targetId={r.id} authorId={r.author_id} notifyType="reply" />
+                  </div>
                 </div>
                 {isEditor && (
                   <button className="text-charcoal-soft hover:text-charcoal flex-shrink-0" onClick={() => deleteReply(r.id)} aria-label="Remove reply">

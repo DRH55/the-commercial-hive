@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { categoryLabel } from "@/lib/data";
+import LikeButton from "../../components/LikeButton";
+import ArticleGlossary from "../../components/ArticleGlossary";
+import { useAuth } from "../../components/AuthProvider";
 
 function MultiPara({ text }) {
   if (!text) return null;
@@ -12,6 +15,7 @@ function MultiPara({ text }) {
 
 export default function ArticlePage() {
   const { id: slug } = useParams();
+  const { user, profile } = useAuth();
   const [article, setArticle] = useState(null);
   const [related, setRelated] = useState([]);
 
@@ -29,6 +33,8 @@ export default function ArticlePage() {
 
   if (!article) return <div className="max-w-[700px] mx-auto px-6 py-16 text-charcoal-soft">Loading…</div>;
 
+  const canEditGlossary = !!user && (user.id === article.author_id || profile?.site_role === "editor");
+
   return (
     <section className="max-w-[1120px] mx-auto px-6 py-16">
       <Link href="/news" className="text-sm font-semibold text-charcoal-soft">&larr; Back to Commercial News</Link>
@@ -37,13 +43,21 @@ export default function ArticlePage() {
         <span className="text-[10.5px] font-mono uppercase tracking-wide bg-charcoal/[0.08] text-charcoal-soft px-2.5 py-1 rounded">{categoryLabel(article.category_id)}</span>
       </div>
       <h1 className="text-[clamp(26px,4vw,38px)] max-w-[760px] leading-tight mt-3.5">{article.title}</h1>
-      <p className="text-[12.5px] text-charcoal-soft mt-3">By {article.profiles?.name} · {new Date(article.published_at).toLocaleDateString()}</p>
+      <div className="flex items-center gap-4 mt-3">
+        <p className="text-[12.5px] text-charcoal-soft">By {article.profiles?.name} · {new Date(article.published_at).toLocaleDateString()}</p>
+        <LikeButton table="article_likes" column="article_id" targetId={article.id} authorId={article.author_id} notifyType="article" contentTitle={article.title} />
+      </div>
       <p className="mt-5 text-[16.5px] text-charcoal-soft italic max-w-[640px] leading-relaxed">{article.excerpt}</p>
 
-      <Block title="What happened" text={article.background} />
-      <Block title="Why it matters commercially" text={article.commercial} />
-      <Block title="Why it matters legally" text={article.legal} />
-      <Block title="Interview relevance" text={article.interview} />
+      <div className="grid lg:grid-cols-[1fr_280px] gap-8 mt-2 items-start">
+        <div className="min-w-0">
+          <Block title="What happened" text={article.background} />
+          <Block title="Why it matters commercially" text={article.commercial} />
+          <Block title="Why it matters legally" text={article.legal} />
+          <Block title="Interview relevance" text={article.interview} />
+        </div>
+        <ArticleGlossary articleId={article.id} canEdit={canEditGlossary} />
+      </div>
 
       {related.length > 0 && (
         <div className="mt-10 max-w-[700px]">
