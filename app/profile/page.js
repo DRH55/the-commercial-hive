@@ -150,15 +150,22 @@ export default function ProfilePage() {
       <div className="mt-9 max-w-[700px] print:hidden">
         <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium">Activity</div>
         <div className="flex flex-col gap-2.5 mt-3">
-          {[...activity.articles.map((a) => ({ label: a.status === "published" ? "Published Article" : a.status === "rejected" ? "Rejected" : "Pending Review", title: a.title })),
+          {[...activity.articles.map((a) => ({ label: a.status === "published" ? "Published Article" : a.status === "rejected" ? "Rejected" : "Pending Review", title: a.title, href: `/news/${a.slug}` })),
             ...activity.responses.map((r) => ({ label: "Challenge Response", title: "Submitted response" })),
             ...activity.replies.map((r) => ({ label: "Discussion Reply", title: r.body.slice(0, 60) })),
-          ].map((item, i) => (
-            <div key={i} className="card flex justify-between items-center">
-              <span className="text-[10.5px] font-mono uppercase tracking-wide bg-amber/10 text-amber px-2.5 py-1 rounded">{item.label}</span>
-              <span className="text-sm">{item.title}</span>
-            </div>
-          ))}
+          ].map((item, i) => {
+            const content = (
+              <>
+                <span className="text-[10.5px] font-mono uppercase tracking-wide bg-amber/10 text-amber px-2.5 py-1 rounded">{item.label}</span>
+                <span className="text-sm">{item.title}</span>
+              </>
+            );
+            return item.href ? (
+              <Link key={i} href={item.href} className="card card-clickable flex justify-between items-center">{content}</Link>
+            ) : (
+              <div key={i} className="card flex justify-between items-center">{content}</div>
+            );
+          })}
           {activity.articles.length + activity.responses.length + activity.replies.length === 0 && (
             <p className="text-charcoal-soft text-sm">Nothing yet. Try a challenge or submit an article.</p>
           )}
