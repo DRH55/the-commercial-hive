@@ -51,12 +51,6 @@ export default function ProfilePage() {
     }
   }
 
-  async function toggleEditorDemo() {
-    const next = profile.site_role === "editor" ? "member" : "editor";
-    await supabase.from("profiles").update({ site_role: next }).eq("id", user.id);
-    refreshProfile();
-  }
-
   if (loading) return <div className="max-w-[700px] mx-auto px-6 py-16 text-charcoal-soft">Loading…</div>;
 
   if (!user) {
@@ -122,8 +116,11 @@ export default function ProfilePage() {
       </div>
 
       <div className="card bg-cream-deep border-none mt-6 max-w-[480px] print:hidden">
-        <p className="text-xs text-charcoal-soft"><strong className="text-charcoal">Prototype shortcut:</strong> in the real product, Editor access is granted by the team. This toggle exists so you can test the Review Queue.</p>
-        <button className="btn-ghost mt-2.5" onClick={toggleEditorDemo}>{profile.site_role === "editor" ? "Remove Editor access (demo)" : "Grant myself Editor access (demo)"}</button>
+        <p className="text-xs text-charcoal-soft">
+          {profile.site_role === "editor"
+            ? <><strong className="text-charcoal">You're an Editor.</strong> You can review submissions in the Review Queue and accept contributor applications.</>
+            : <>Want to become a contributor? <Link href="/apply" className="text-amber font-semibold">Apply here</Link>.</>}
+        </p>
       </div>
 
       <div className="mt-9 max-w-[700px]">

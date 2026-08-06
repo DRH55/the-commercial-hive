@@ -1,20 +1,26 @@
 "use client";
 import { useEffect, useState } from "react";
-import { CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
+import { CheckCircle2, XCircle, ShieldCheck, UserPlus } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { categoryLabel } from "@/lib/data";
 import { useAuth } from "../components/AuthProvider";
+import Avatar from "../components/Avatar";
+
+const TIERS = ["Guest Contributor", "Monthly Contributor", "Weekly Contributor"];
 
 export default function ReviewQueuePage() {
   const { profile, loading } = useAuth();
   const [pending, setPending] = useState([]);
   const [actioned, setActioned] = useState([]);
+  const [applications, setApplications] = useState([]);
 
   async function load() {
     const { data: pendingData } = await supabase.from("articles").select("*, profiles(name)").eq("status", "pending").order("created_at");
     const { data: actionedData } = await supabase.from("articles").select("*, profiles(name)").in("status", ["published", "rejected"]).order("created_at", { ascending: false }).limit(10);
+    const { data: applicationData } = await supabase.from("applications").select("*, profiles(name, bio, university)").eq("status", "pending").order("created_at");
     setPending(pendingData || []);
     setActioned(actionedData || []);
+    setApplications(applicationData || []);
   }
 
   useEffect(() => { load(); }, []);
@@ -24,6 +30,14 @@ export default function ReviewQueuePage() {
       status: decision === "approve" ? "published" : "rejected",
       published_at: decision === "approve" ? new Date().toISOString() : null,
     }).eq("id", article.id);
+    load();
+  }
+
+  async function decideApplication(app, decision, tier) {
+    await supabase.from("applications").update({ status: decision }).eq("id", app.id);
+    if (decision === "accepted") {
+      await supabase.from("profiles").update({ contributor_tier: tier || "Guest Contributor" }).eq("id", app.user_id);
+    }
     load();
   }
 
@@ -43,6 +57,35 @@ export default function ReviewQueuePage() {
       <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium mb-2.5">Editor Tools</div>
       <h1 className="text-[30px]">Review Queue</h1>
       <p className="mt-2.5 text-charcoal-soft max-w-[560px]">Approving here publishes the piece to Commercial News immediately.</p>
+
+      {applications.length > 0 && (
+        <div className="mt-8 max-w-[700px]">
+          <div className="flex items-center gap-1.5"><UserPlus size={14} className="text-amber" /><span className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium">Contributor Applications ({applications.length})</span></div>
+          <div className="flex flex-col gap-3.5 mt-3">
+            {applications.map((app) => (
+              <div key={app.id} className="card">
+                <div className="flex gap-3 items-start">
+                  <Avatar photo={app.profiles?.photo_url} name={app.profiles?.name} size={36} />
+                  <div className="flex-1">
+                    <div className="font-semibold text-[15px]">{app.profiles?.name}</div>
+                    {app.profiles?.university && <div className="text-xs text-charcoal-soft">{app.profiles.university}</div>}
+                    {app.interest && <div className="text-xs text-amber font-semibold mt-1">Interested in: {app.interest}</div>}
+                  </div>
+                </div>
+                <p className="text-sm text-charcoal-soft mt-3">{app.sample}</p>
+                <div className="flex gap-2 flex-wrap mt-4 items-center">
+                  {TIERS.map((tier) => (
+                    <button key={tier} className="btn-ghost text-xs" onClick={() => decideApplication(app, "accepted", tier)}>
+                      Accept as {tier}
+                    </button>
+                  ))}
+                  <button className="btn-ghost text-xs text-red-600 border-red-300" onClick={() => decideApplication(app, "declined")}>Decline</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 max-w-[700px]">
         <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium">Pending ({pending.length})</div>

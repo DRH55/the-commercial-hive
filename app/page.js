@@ -5,8 +5,10 @@ import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { categoryLabel } from "@/lib/data";
 import Avatar from "./components/Avatar";
+import { useAuth } from "./components/AuthProvider";
 
 export default function HomePage() {
+  const { user } = useAuth();
   const [articles, setArticles] = useState([]);
   const [challenge, setChallenge] = useState(null);
   const [contributors, setContributors] = useState([]);
@@ -106,7 +108,7 @@ export default function HomePage() {
           <Sparkles size={22} className="text-amber-light mx-auto" />
           <h3 className="text-2xl mt-3.5 text-cream">Ready to build your commercial portfolio?</h3>
           <p className="text-cream/70 mt-2.5 max-w-[480px] mx-auto">Applications are open to law, SQE, LPC and GDL students at any stage.</p>
-          <Link href="/signup" className="btn-primary mt-5 bg-amber inline-flex">Apply to Contribute</Link>
+          <button className="btn-primary mt-5 bg-amber inline-flex" onClick={() => window.location.href = user ? "/apply" : "/signup"}>Apply to Contribute</button>
         </div>
       </section>
     </>
