@@ -36,8 +36,8 @@ export default function Nav() {
           {profile?.site_role === "editor" && (
             <Link href="/review" className="text-[13.5px] font-medium text-amber">Review Queue</Link>
           )}
-          {user && !profile?.contributor_tier && profile?.site_role !== "editor" && (
-            <Link href="/apply" className="btn-ghost">Apply to Contribute</Link>
+          {user && (
+            <Link href="/news/submit" className="btn-ghost">Submit an Article</Link>
           )}
           {user ? (
             <Link href="/profile" className="flex items-center gap-2">

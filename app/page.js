@@ -60,7 +60,7 @@ export default function HomePage() {
 
         {articles.length === 0 ? (
           <div className="card empty-state text-center py-12 text-charcoal-soft">
-            No published articles yet — once you approve one in the Review Queue, it'll show up here.
+            No published articles yet. Once you approve one in the Review Queue, it'll show up here.
           </div>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -112,8 +112,9 @@ export default function HomePage() {
         <div className="card bg-charcoal text-cream text-center py-10 px-8">
           <Sparkles size={22} className="text-amber-light mx-auto" />
           <h3 className="text-2xl mt-3.5 text-cream">Ready to build your commercial portfolio?</h3>
-          <p className="text-cream/70 mt-2.5 max-w-[480px] mx-auto">Applications are open to law, SQE, LPC and GDL students at any stage.</p>
-          <button className="btn-primary mt-5 bg-amber inline-flex" onClick={() => window.location.href = user ? "/apply" : "/signup"}>Apply to Contribute</button>
+          <p className="text-cream/70 mt-2.5 max-w-[480px] mx-auto">Open to law, SQE, LPC and GDL students at any stage. Just create a profile and submit your first piece.</p>
+          <button className="btn-primary mt-5 bg-amber inline-flex" onClick={() => window.location.href = user ? "/news/submit" : "/signup"}>Submit an Article</button>
+          <Link href="/badges" className="text-cream/60 text-[12.5px] mt-4 inline-block hover:text-cream">See how contributor badges work →</Link>
         </div>
       </section>
     </>

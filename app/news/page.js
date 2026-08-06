@@ -24,7 +24,7 @@ export default function NewsPage() {
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
           <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium mb-2.5">Commercial News</div>
-          <h1 className="text-[30px] max-w-[640px]">Commercial stories explained — not journalism, analysis.</h1>
+          <h1 className="text-[30px] max-w-[640px]">Commercial stories explained: not journalism, analysis.</h1>
         </div>
         <Link href={user ? "/news/submit" : "/login"} className="btn-primary"><Plus size={14} /> Submit an Article</Link>
       </div>

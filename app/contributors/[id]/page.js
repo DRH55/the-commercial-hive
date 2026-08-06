@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Printer, Share2, ChevronRight, Award, Flame } from "lucide-react";
+import { Printer, Share2, ChevronRight, Award, Flame, Linkedin } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { categoryLabel, BADGES, computeEarnedBadges } from "@/lib/data";
 import Avatar from "../../components/Avatar";
@@ -51,6 +51,23 @@ export default function ContributorProfilePage() {
           {profile.streak > 0 && <div className="text-[11.5px] text-amber font-semibold mt-1 flex items-center gap-1"><Flame size={12} /> {profile.streak}-week contribution streak</div>}
         </div>
       </div>
+
+      {profile.linkedin_url && (
+        <a
+          href={profile.linkedin_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="card card-clickable flex items-center gap-3 mt-5 max-w-[320px] print:hidden"
+        >
+          <div className="w-9 h-9 rounded-full bg-[#0A66C2] flex items-center justify-center flex-shrink-0">
+            <Linkedin size={17} color="#fff" />
+          </div>
+          <div>
+            <div className="text-[13.5px] font-semibold">{profile.name} on LinkedIn</div>
+            <div className="text-[12px] text-charcoal-soft">View profile</div>
+          </div>
+        </a>
+      )}
 
       {profile.bio && <div className="card mt-6 max-w-[640px]"><h4 className="text-[11px] font-mono uppercase tracking-wide text-amber font-medium mb-2">Who they are</h4><p className="text-[14.5px] text-charcoal-soft">{profile.bio}</p></div>}
       {profile.goals && <div className="card mt-4 max-w-[640px]"><h4 className="text-[11px] font-mono uppercase tracking-wide text-amber font-medium mb-2">What they're working toward</h4><p className="text-[14.5px] text-charcoal-soft">{profile.goals}</p></div>}

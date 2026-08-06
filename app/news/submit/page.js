@@ -34,7 +34,7 @@ export default function SubmitArticlePage() {
       return;
     }
     if (form.commercial.length < 200 || form.legal.length < 200) {
-      setError("Aim for genuine depth — a couple of paragraphs, not a one-liner, in the commercial and legal sections.");
+      setError("Aim for genuine depth: a couple of paragraphs, not a one-liner, in the commercial and legal sections.");
       return;
     }
     setSubmitting(true);
@@ -61,7 +61,7 @@ export default function SubmitArticlePage() {
       <h1 className="text-[28px]">Every submission follows the same structure.</h1>
       <div className="card bg-cream-deep border-none mt-6">
         <p className="text-[13px] text-charcoal-soft">
-          Nothing publishes automatically. Every submission goes to an editor first — its status changes
+          Nothing publishes automatically. Every submission goes to an editor first. Its status changes
           from <strong className="text-charcoal">Pending Review</strong> to <strong className="text-charcoal">Published</strong> once it's checked.
         </p>
       </div>
@@ -78,16 +78,16 @@ export default function SubmitArticlePage() {
             ))}
           </div>
         </div>
-        <Field label="The Hook — one or two sentences on what happened and why it's worth reading">
+        <Field label="The Hook: one or two sentences on what happened and why it's worth reading">
           <textarea className="field-input" rows={2} value={form.excerpt} onChange={(e) => set("excerpt", e.target.value)} />
         </Field>
-        <Field label="What happened — the factual background, in your own words">
+        <Field label="What happened: the factual background, in your own words">
           <textarea className="field-input" rows={3} value={form.background} onChange={(e) => set("background", e.target.value)} />
         </Field>
-        <Field label="Why it matters commercially — aim for 2 short paragraphs, not one line">
+        <Field label="Why it matters commercially: aim for 2 short paragraphs, not one line">
           <textarea className="field-input" rows={7} value={form.commercial} onChange={(e) => set("commercial", e.target.value)} />
         </Field>
-        <Field label="Why it matters legally — aim for 2 short paragraphs, not one line">
+        <Field label="Why it matters legally: aim for 2 short paragraphs, not one line">
           <textarea className="field-input" rows={7} value={form.legal} onChange={(e) => set("legal", e.target.value)} />
         </Field>
         <Field label="Interview relevance">

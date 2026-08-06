@@ -33,7 +33,7 @@ export default function ProfilePage() {
   async function handleSave() {
     setSaving(true);
     await supabase.from("profiles").update({
-      name: form.name, bio: form.bio, goals: form.goals, university: form.university, course: form.course,
+      name: form.name, bio: form.bio, goals: form.goals, university: form.university, course: form.course, linkedin_url: form.linkedin_url,
     }).eq("id", user.id);
     setSaving(false);
     refreshProfile();
@@ -79,7 +79,7 @@ export default function ProfilePage() {
         </div>
       </div>
       <h1 className="text-[30px]">Your profile</h1>
-      <p className="mt-2.5 text-charcoal-soft max-w-[560px]">This is what a recruiter sees if they click through to you as a contributor — keep it current.</p>
+      <p className="mt-2.5 text-charcoal-soft max-w-[560px]">This is what a recruiter sees if they click through to you as a contributor. Keep it current.</p>
 
       <div className="flex gap-4.5 items-center mt-7 print:hidden">
         <Avatar photo={form.photo_url} name={form.name} size={64} />
@@ -112,6 +112,10 @@ export default function ProfilePage() {
           <label className="text-xs font-semibold text-charcoal-soft block mb-1">What are you working toward?</label>
           <textarea className="field-input" rows={2} value={form.goals || ""} onChange={(e) => saveField("goals", e.target.value)} />
         </div>
+        <div>
+          <label className="text-xs font-semibold text-charcoal-soft block mb-1">LinkedIn profile URL</label>
+          <input className="field-input" placeholder="https://www.linkedin.com/in/yourname" value={form.linkedin_url || ""} onChange={(e) => saveField("linkedin_url", e.target.value)} />
+        </div>
         <button className="btn-primary self-start print:hidden" onClick={handleSave} disabled={saving}>{saving ? "Saving…" : "Save changes"}</button>
       </div>
 
@@ -124,7 +128,10 @@ export default function ProfilePage() {
       </div>
 
       <div className="mt-9 max-w-[700px]">
-        <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium">Badges</div>
+        <div className="flex items-center justify-between">
+          <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium">Badges</div>
+          <Link href="/badges" className="text-amber text-[12.5px] font-semibold">How badges work</Link>
+        </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
           {BADGES.map((b) => {
             const isEarned = earned.has(b.id);
@@ -153,7 +160,7 @@ export default function ProfilePage() {
             </div>
           ))}
           {activity.articles.length + activity.responses.length + activity.replies.length === 0 && (
-            <p className="text-charcoal-soft text-sm">Nothing yet — try a challenge or submit an article.</p>
+            <p className="text-charcoal-soft text-sm">Nothing yet. Try a challenge or submit an article.</p>
           )}
         </div>
       </div>

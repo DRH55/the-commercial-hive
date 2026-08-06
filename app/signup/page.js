@@ -59,7 +59,7 @@ export default function SignupPage() {
   return (
     <div className="max-w-[480px] mx-auto px-6 py-16">
       <h1 className="text-2xl font-semibold">Join the Hive</h1>
-      <p className="text-[13.5px] text-charcoal-soft mt-2">This becomes your public contributor profile — you can edit anything later.</p>
+      <p className="text-[13.5px] text-charcoal-soft mt-2">This becomes your public contributor profile. You can edit anything later.</p>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <Field label="Full name"><input className="field-input" required value={form.name} onChange={(e) => set("name", e.target.value)} /></Field>
