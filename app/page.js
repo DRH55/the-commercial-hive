@@ -5,6 +5,8 @@ import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { categoryLabel } from "@/lib/data";
 import Avatar from "./components/Avatar";
+import HexagonDecoration from "./components/HexagonDecoration";
+import HiveBuzz from "./components/HiveBuzz";
 import { useAuth } from "./components/AuthProvider";
 
 export default function HomePage() {
@@ -28,7 +30,8 @@ export default function HomePage() {
   return (
     <>
       <header className="border-b border-line relative overflow-hidden">
-        <div className="max-w-[1120px] mx-auto px-6 pt-20 pb-16">
+        <HexagonDecoration />
+        <div className="max-w-[1120px] mx-auto px-6 pt-20 pb-16 relative z-[1]">
           <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium mb-2.5">The Commercial Hive</div>
           <h1 className="text-[clamp(34px,5.2vw,58px)] leading-[1.05] max-w-[780px] font-medium">
             Where future commercial lawyers <span className="text-amber">develop</span> commercial judgement.
@@ -43,6 +46,8 @@ export default function HomePage() {
           </div>
         </div>
       </header>
+
+      <HiveBuzz />
 
       <section className="max-w-[1120px] mx-auto px-6 py-16">
         <div className="flex items-end justify-between mb-8 gap-4 flex-wrap">
