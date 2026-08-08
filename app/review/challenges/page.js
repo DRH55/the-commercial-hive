@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, PlusCircle } from "lucide-react";
+import { ShieldCheck, PlusCircle, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { CATEGORIES, categoryLabel } from "@/lib/data";
 import { useAuth } from "../../components/AuthProvider";
@@ -18,6 +18,8 @@ export default function ManageChallengesPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState(null);
 
   async function load() {
     const { data } = await supabase.from("challenges").select("*").order("created_at", { ascending: false });
@@ -49,6 +51,40 @@ export default function ManageChallengesPage() {
       setForm(EMPTY_FORM);
       load();
     }
+  }
+
+  function startEdit(challenge) {
+    setEditingId(challenge.id);
+    setEditForm({ ...challenge });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditForm(null);
+  }
+
+  function setEditField(key, value) {
+    setEditForm((f) => ({ ...f, [key]: value }));
+  }
+
+  async function saveEdit() {
+    setSaving(true);
+    await supabase.from("challenges").update({
+      title: editForm.title,
+      category_id: editForm.category_id,
+      difficulty: editForm.difficulty,
+      scenario: editForm.scenario,
+      question: editForm.question,
+    }).eq("id", editForm.id);
+    setSaving(false);
+    cancelEdit();
+    load();
+  }
+
+  async function deleteChallenge(challenge) {
+    if (!confirm(`Remove "${challenge.title}"? This can't be undone.`)) return;
+    await supabase.from("challenges").delete().eq("id", challenge.id);
+    load();
   }
 
   if (loading) return null;
@@ -113,11 +149,56 @@ export default function ManageChallengesPage() {
         <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium">Existing Challenges ({challenges.length})</div>
         <div className="flex flex-col gap-2.5 mt-3">
           {challenges.map((c) => (
-            <div key={c.id} className="card flex justify-between items-center gap-3">
-              <div>
-                <div className="font-semibold text-sm">{c.title}</div>
-                <div className="text-xs text-charcoal-soft mt-1">{categoryLabel(c.category_id)} · {c.difficulty}</div>
-              </div>
+            <div key={c.id} className="card">
+              {editingId === c.id ? (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <label className="text-[11px] font-mono uppercase tracking-wide text-charcoal-soft">Title</label>
+                    <input className="field-input mt-1.5" value={editForm.title} onChange={(e) => setEditField("title", e.target.value)} />
+                  </div>
+                  <div className="flex gap-4 flex-wrap">
+                    <div className="flex-1 min-w-[160px]">
+                      <label className="text-[11px] font-mono uppercase tracking-wide text-charcoal-soft">Category</label>
+                      <select className="field-input mt-1.5" value={editForm.category_id} onChange={(e) => setEditField("category_id", e.target.value)}>
+                        {CATEGORIES.map((cat) => <option key={cat.id} value={cat.id}>{cat.label}</option>)}
+                      </select>
+                    </div>
+                    <div className="flex-1 min-w-[160px]">
+                      <label className="text-[11px] font-mono uppercase tracking-wide text-charcoal-soft">Difficulty</label>
+                      <select className="field-input mt-1.5" value={editForm.difficulty} onChange={(e) => setEditField("difficulty", e.target.value)}>
+                        {DIFFICULTIES.map((d) => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono uppercase tracking-wide text-charcoal-soft">Scenario</label>
+                    <textarea rows={4} className="field-input mt-1.5" value={editForm.scenario} onChange={(e) => setEditField("scenario", e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono uppercase tracking-wide text-charcoal-soft">Question</label>
+                    <textarea rows={2} className="field-input mt-1.5" value={editForm.question} onChange={(e) => setEditField("question", e.target.value)} />
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="btn-primary" disabled={saving} onClick={saveEdit}>{saving ? "Saving…" : "Save changes"}</button>
+                    <button className="btn-ghost" onClick={cancelEdit}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-between items-center gap-3">
+                  <div>
+                    <div className="font-semibold text-sm">{c.title}</div>
+                    <div className="text-xs text-charcoal-soft mt-1">{categoryLabel(c.category_id)} · {c.difficulty}</div>
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button className="btn-ghost inline-flex items-center gap-1.5" onClick={() => startEdit(c)}>
+                      <Pencil size={13} /> Edit
+                    </button>
+                    <button className="btn-ghost inline-flex items-center gap-1.5 text-red-600 border-red-300" onClick={() => deleteChallenge(c)}>
+                      <Trash2 size={13} /> Remove
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
