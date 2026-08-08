@@ -10,9 +10,9 @@ const ACHIEVEMENT_BADGES = [
 ];
 
 const TIERS = [
-  { name: "Guest Contributor", desc: "Invited to contribute a one-off piece" },
-  { name: "Monthly Contributor", desc: "Publishes on a monthly cadence" },
-  { name: "Weekly Contributor", desc: "Publishes on a weekly cadence" },
+  { name: "Guest Contributor", desc: "1 published article" },
+  { name: "Monthly Contributor", desc: "3 published articles, unlocks a certificate" },
+  { name: "Weekly Contributor", desc: "8 published articles, unlocks a certificate" },
 ];
 
 export default function BadgesPage() {
@@ -45,11 +45,12 @@ export default function BadgesPage() {
       </div>
 
       <div className="mt-12">
-        <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium mb-2.5">Editor-assigned</div>
+        <div className="text-[11px] font-mono uppercase tracking-widest text-amber font-medium mb-2.5">Earned automatically</div>
         <h2 className="text-xl">Contributor tiers</h2>
         <p className="text-[13.5px] text-charcoal-soft mt-1.5 max-w-[600px]">
-          As you publish, an editor may recognise your work with a tier, shown next to your name
-          across the site. There's no fixed quota. It reflects the consistency and quality an editor has seen from you.
+          Tiers are based purely on how many articles you've had published, shown next to your name across the
+          site. No application or editor approval needed. Monthly and Weekly Contributors also unlock a
+          personalised certificate to download from their profile, with their name and the sectors they've written in.
         </p>
         <div className="flex flex-col gap-3 mt-5 max-w-[480px]">
           {TIERS.map((t) => (
@@ -71,7 +72,7 @@ export default function BadgesPage() {
           <ShieldCheck size={18} className="text-amber flex-shrink-0" />
           <div>
             <div className="font-display font-semibold text-[15px]">Editor</div>
-            <div className="text-[12.5px] text-charcoal-soft mt-0.5">Reviews and publishes submissions. Not an achievement to unlock — it's shown only on Hive editors' profiles.</div>
+            <div className="text-[12.5px] text-charcoal-soft mt-0.5">Reviews and publishes submissions. Not an achievement to unlock, it's shown only on Hive editors' profiles.</div>
           </div>
         </div>
       </div>

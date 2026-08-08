@@ -13,9 +13,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <AuthProvider>
-          <Nav />
+          <div className="print:hidden"><Nav /></div>
           {children}
-          <footer className="border-t border-line px-6 py-10 mt-10">
+          <footer className="border-t border-line px-6 py-10 mt-10 print:hidden">
             <div className="max-w-[1120px] mx-auto flex justify-between items-center flex-wrap gap-4">
               <span className="font-display font-semibold text-sm">The Commercial Hive</span>
               <p className="text-[12.5px] text-charcoal-soft">

@@ -7,8 +7,6 @@ import { CATEGORIES, categoryLabel } from "@/lib/data";
 import { useAuth } from "../components/AuthProvider";
 import Avatar from "../components/Avatar";
 
-const TIERS = ["Guest Contributor", "Monthly Contributor", "Weekly Contributor"];
-
 const EDIT_FIELDS = [
   { key: "title", label: "Title", type: "input" },
   { key: "category_id", label: "Category", type: "select" },
@@ -56,11 +54,8 @@ export default function ReviewQueuePage() {
     load();
   }
 
-  async function decideApplication(app, decision, tier) {
+  async function decideApplication(app, decision) {
     await supabase.from("applications").update({ status: decision }).eq("id", app.id);
-    if (decision === "accepted") {
-      await supabase.from("profiles").update({ contributor_tier: tier || "Guest Contributor" }).eq("id", app.user_id);
-    }
     load();
   }
 
@@ -134,12 +129,9 @@ export default function ReviewQueuePage() {
                   </div>
                 </div>
                 <p className="text-sm text-charcoal-soft mt-3">{app.sample}</p>
-                <div className="flex gap-2 flex-wrap mt-4 items-center">
-                  {TIERS.map((tier) => (
-                    <button key={tier} className="btn-ghost text-xs" onClick={() => decideApplication(app, "accepted", tier)}>
-                      Accept as {tier}
-                    </button>
-                  ))}
+                <p className="text-[11.5px] text-charcoal-soft mt-2">Contributor tiers are earned automatically from published articles, not assigned here.</p>
+                <div className="flex gap-2 flex-wrap mt-3 items-center">
+                  <button className="btn-primary text-xs" onClick={() => decideApplication(app, "accepted")}>Accept</button>
                   <button className="btn-ghost text-xs text-red-600 border-red-300" onClick={() => decideApplication(app, "declined")}>Decline</button>
                 </div>
               </div>

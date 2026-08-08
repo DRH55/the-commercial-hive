@@ -124,10 +124,20 @@ export default function ProfilePage() {
       <div className="card bg-cream-deep border-none mt-6 max-w-[480px] print:hidden">
         <p className="text-xs text-charcoal-soft">
           {profile.site_role === "editor"
-            ? <><strong className="text-charcoal">You're an Editor.</strong> You can review submissions in the Review Queue and accept contributor applications.</>
-            : <>Want to become a contributor? <Link href="/apply" className="text-amber font-semibold">Apply here</Link>.</>}
+            ? <><strong className="text-charcoal">You're an Editor.</strong> You can review submissions in the Review Queue.</>
+            : <>Publish articles to automatically become a Guest, Monthly, or Weekly Contributor. <Link href="/badges" className="text-amber font-semibold">See how it works</Link>.</>}
         </p>
       </div>
+
+      {(profile.contributor_tier === "Monthly Contributor" || profile.contributor_tier === "Weekly Contributor") && (
+        <Link href="/certificate" className="card card-clickable flex items-center gap-3 mt-4 max-w-[480px] print:hidden border-amber/40">
+          <Award size={20} className="text-amber flex-shrink-0" />
+          <div>
+            <div className="font-semibold text-sm">Your certificate is ready</div>
+            <div className="text-xs text-charcoal-soft">Download your personalised {profile.contributor_tier} certificate</div>
+          </div>
+        </Link>
+      )}
 
       <div className="mt-9 max-w-[700px]">
         <div className="flex items-center justify-between">
