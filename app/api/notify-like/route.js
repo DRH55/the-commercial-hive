@@ -18,8 +18,8 @@ export async function POST(req) {
       return NextResponse.json({ ok: false, error: "missing fields" }, { status: 400 });
     }
 
-    const { data: author } = await supabase.from("profiles").select("name, email").eq("id", authorId).single();
-    if (!author?.email) {
+    const { data: authorEmail } = await supabase.rpc("get_notify_email", { target_id: authorId });
+    if (!authorEmail) {
       return NextResponse.json({ ok: false, error: "author not found" }, { status: 404 });
     }
 
@@ -35,7 +35,7 @@ export async function POST(req) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "The Commercial Hive <notifications@thecommercialhive.com>",
-      to: author.email,
+      to: authorEmail,
       subject,
       text,
     });

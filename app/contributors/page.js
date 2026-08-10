@@ -12,7 +12,9 @@ export default function ContributorsPage() {
   const [filter, setFilter] = useState(null);
 
   useEffect(() => {
-    supabase.from("profiles").select("*").order("created_at").then(({ data }) => setContributors(data || []));
+    supabase.from("profiles")
+      .select("id, name, photo_url, university, course, bio, goals, site_role, contributor_tier, streak, linkedin_url, created_at")
+      .order("created_at").then(({ data }) => setContributors(data || []));
     supabase.from("articles").select("author_id, category_id").eq("status", "published").then(({ data }) => {
       const counts = {};
       (data || []).forEach((a) => { counts[a.author_id] = counts[a.author_id] || []; counts[a.author_id].push(a.category_id); });

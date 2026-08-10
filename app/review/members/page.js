@@ -12,7 +12,7 @@ export default function MembersPage() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    supabase.from("profiles").select("*").order("created_at", { ascending: false }).then(({ data }) => setMembers(data || []));
+    supabase.rpc("list_members").order("created_at", { ascending: false }).then(({ data }) => setMembers(data || []));
     supabase.from("articles").select("id", { count: "exact", head: true }).eq("status", "published").then(({ count }) => setArticleCount(count || 0));
   }, []);
 

@@ -17,6 +17,19 @@ export default function SignupPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  function handlePhotoSelect(e) {
+    const file = e.target.files?.[0];
+    if (!file) { setPhotoFile(null); return; }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("That photo is over 5MB. Please choose a smaller file.");
+      e.target.value = "";
+      setPhotoFile(null);
+      return;
+    }
+    setError("");
+    setPhotoFile(file);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -66,7 +79,7 @@ export default function SignupPage() {
         <Field label="Email"><input className="field-input" type="email" required value={form.email} onChange={(e) => set("email", e.target.value)} /></Field>
         <Field label="Password"><input className="field-input" type="password" required minLength={6} value={form.password} onChange={(e) => set("password", e.target.value)} /></Field>
         <Field label="Profile photo (optional)">
-          <input type="file" accept="image/*" onChange={(e) => setPhotoFile(e.target.files?.[0] || null)} />
+          <input type="file" accept="image/*" onChange={handlePhotoSelect} />
         </Field>
         <Field label="University"><input className="field-input" value={form.university} onChange={(e) => set("university", e.target.value)} placeholder="e.g. University of Bristol" /></Field>
         <Field label="What are you studying / did you study?"><input className="field-input" value={form.course} onChange={(e) => set("course", e.target.value)} placeholder="e.g. LLB Law, Final Year" /></Field>

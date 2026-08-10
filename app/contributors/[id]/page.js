@@ -15,7 +15,9 @@ export default function ContributorProfilePage() {
   const [replies, setReplies] = useState([]);
 
   useEffect(() => {
-    supabase.from("profiles").select("*").eq("id", id).single().then(({ data }) => setProfile(data));
+    supabase.from("profiles")
+      .select("id, name, photo_url, university, course, bio, goals, site_role, contributor_tier, streak, linkedin_url, created_at")
+      .eq("id", id).single().then(({ data }) => setProfile(data));
     supabase.from("articles").select("*").eq("author_id", id).eq("status", "published").then(({ data }) => setArticles(data || []));
     supabase.from("challenge_responses").select("*, challenges(category_id)").eq("user_id", id).then(({ data }) =>
       setResponses((data || []).map((r) => ({ ...r, category_id: r.challenges?.category_id }))));

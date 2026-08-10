@@ -23,7 +23,7 @@ export default function HomePage() {
     supabase.from("challenges").select("*").order("created_at").limit(1)
       .then(({ data }) => setChallenge(data?.[0] || null));
 
-    supabase.from("profiles").select("*").order("created_at").limit(3)
+    supabase.from("profiles").select("id, name, photo_url, contributor_tier, streak").order("created_at").limit(3)
       .then(({ data }) => setContributors(data || []));
   }, []);
 

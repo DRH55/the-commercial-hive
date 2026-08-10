@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState(null);
   const [activity, setActivity] = useState({ articles: [], responses: [], replies: [], applications: [] });
   const [saving, setSaving] = useState(false);
+  const [photoError, setPhotoError] = useState("");
 
   useEffect(() => {
     if (profile) setForm(profile);
@@ -42,12 +43,20 @@ export default function ProfilePage() {
   async function handlePhotoUpload(e) {
     const file = e.target.files?.[0];
     if (!file || !user) return;
+    setPhotoError("");
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoError("That photo is over 5MB. Please choose a smaller file.");
+      e.target.value = "";
+      return;
+    }
     const path = `${user.id}/${Date.now()}-${file.name}`;
     const { error } = await supabase.storage.from("avatars").upload(path, file);
     if (!error) {
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
       await supabase.from("profiles").update({ photo_url: data.publicUrl }).eq("id", user.id);
       refreshProfile();
+    } else {
+      setPhotoError("Something went wrong uploading that photo. Please try again.");
     }
   }
 
@@ -92,6 +101,7 @@ export default function ProfilePage() {
         <div>
           <label className="text-xs font-semibold text-charcoal-soft block mb-1">Photo</label>
           <input type="file" accept="image/*" onChange={handlePhotoUpload} />
+          {photoError && <p className="text-xs text-red-600 mt-1 max-w-[220px]">{photoError}</p>}
         </div>
       </div>
 

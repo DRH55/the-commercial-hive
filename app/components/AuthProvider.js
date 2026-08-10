@@ -14,7 +14,9 @@ export function AuthProvider({ children }) {
       setProfile(null);
       return;
     }
-    const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
+    const { data } = await supabase.from("profiles")
+      .select("id, name, photo_url, university, course, bio, goals, site_role, contributor_tier, streak, linkedin_url, created_at")
+      .eq("id", userId).single();
     setProfile(data || null);
   }, []);
 
