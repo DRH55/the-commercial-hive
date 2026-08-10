@@ -46,7 +46,7 @@ export default function ContributorProfilePage() {
         <Avatar photo={profile.photo_url} name={profile.name} size={64} />
         <div>
           <h1 className="text-[28px]">{profile.name}</h1>
-          <div className="text-amber text-[13px] font-semibold mt-1">{profile.contributor_tier || "Member"}</div>
+          <div className="text-amber text-[13px] font-semibold mt-1">{profile.site_role === "editor" ? "Editor" : profile.contributor_tier || "Member"}</div>
           {profile.university && <div className="text-[12.5px] text-charcoal-soft mt-1">{profile.course ? `${profile.course} · ` : ""}{profile.university}</div>}
           {profile.streak > 0 && <div className="text-[11.5px] text-amber font-semibold mt-1 flex items-center gap-1"><Flame size={12} /> {profile.streak}-week contribution streak</div>}
         </div>

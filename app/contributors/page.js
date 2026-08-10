@@ -63,7 +63,7 @@ export default function ContributorsPage() {
             <Avatar photo={c.photo_url} name={c.name} size={40} />
             <div>
               <div className="font-display font-semibold text-[15.5px]">{c.name}</div>
-              <div className="text-xs text-amber mt-0.5">{c.contributor_tier || "Member"}</div>
+              <div className="text-xs text-amber mt-0.5">{c.site_role === "editor" ? "Editor" : c.contributor_tier || "Member"}</div>
               {c.university && <div className="text-[11.5px] text-charcoal-soft mt-0.5">{c.university}</div>}
               <p className="text-[13px] text-charcoal-soft mt-2 leading-relaxed">{c.bio}</p>
             </div>
