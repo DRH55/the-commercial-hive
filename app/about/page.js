@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { Clock, Compass, Award, ArrowRight } from "lucide-react";
+import { Clock, Compass, Award, ArrowRight, ShieldAlert } from "lucide-react";
+
+const TIER_GUIDE = [
+  { tier: "Guest Contributor", earned: "1 published article", listAs: "Guest Contributor, The Commercial Hive" },
+  { tier: "Monthly Contributor", earned: "3 published articles", listAs: "Monthly Contributor, The Commercial Hive" },
+  { tier: "Weekly Contributor", earned: "8 published articles", listAs: "Weekly Contributor, The Commercial Hive" },
+];
 
 export default function AboutPage() {
   return (
@@ -55,11 +61,46 @@ export default function AboutPage() {
               profile, with your name, your tier, and the sectors you've written in, ready to reference in
               applications.
             </p>
+
+            <div className="card mt-5 max-w-[620px]">
+              <h3 className="text-[11px] font-mono uppercase tracking-wide text-amber font-medium mb-3">Exactly how to list it</h3>
+              <div className="flex flex-col gap-3">
+                {TIER_GUIDE.map((t) => (
+                  <div key={t.tier} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 pb-3 border-b border-line last:border-0 last:pb-0">
+                    <div className="text-[13.5px] font-semibold w-[170px] flex-shrink-0">{t.tier}</div>
+                    <div className="text-[12.5px] text-charcoal-soft flex-1">
+                      Earned after {t.earned}. List as <span className="text-charcoal font-medium">&ldquo;{t.listAs}&rdquo;</span>.
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[12.5px] text-charcoal-soft mt-4 pt-4 border-t border-line">
+                Add it under <strong className="text-charcoal">Volunteer Experience</strong> on your CV or LinkedIn,
+                not Work Experience. "Monthly" and "Weekly" describe how often you publish, not hours worked.
+                Never list this as full-time or part-time employment.
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="card mt-12 bg-cream-deep border-none text-center py-9 max-w-[600px] mx-auto">
+      <div className="card mt-10 max-w-[700px] border-amber/40">
+        <div className="flex gap-3">
+          <ShieldAlert size={20} className="text-amber flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 className="text-[15.5px] font-semibold">Only list a title you've actually earned</h3>
+            <p className="mt-2 text-[13.5px] text-charcoal-soft leading-relaxed">
+              Every contributor's profile and published work on this site is public, so a title on your CV or
+              LinkedIn can be checked against what you've actually published here. Listing yourself as a
+              Contributor, Writer, or similar for The Commercial Hive before you've published anything isn't
+              accurate, and it's a five-second check for anyone who looks. Publish your first piece before you
+              add anything to your CV or LinkedIn. It's a small wait for something that will actually hold up.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="card mt-6 bg-cream-deep border-none text-center py-9 max-w-[600px] mx-auto">
         <p className="text-charcoal-soft text-sm">Contributor tiers are earned automatically, not assigned. Just publish.</p>
         <Link href="/news/submit" className="btn-primary mt-4 inline-flex items-center gap-1.5">
           Submit an Article <ArrowRight size={14} />
