@@ -44,11 +44,6 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     setPhotoError("");
-    if (file.size > 5 * 1024 * 1024) {
-      setPhotoError("That photo is over 5MB. Please choose a smaller file.");
-      e.target.value = "";
-      return;
-    }
     const path = `${user.id}/${Date.now()}-${file.name}`;
     const { error } = await supabase.storage.from("avatars").upload(path, file);
     if (!error) {

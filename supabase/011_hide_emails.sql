@@ -9,7 +9,12 @@
 -- (Members page) and the like-notification route keep working.
 -- ============================================================
 
-revoke select (email) on profiles from anon, authenticated;
+-- Supabase grants table-wide SELECT by default, which overrides a
+-- column-specific revoke on its own. Revoke everything, then grant
+-- back only the non-sensitive columns.
+revoke select on profiles from anon, authenticated;
+grant select (id, name, photo_url, university, course, bio, goals, site_role, contributor_tier, streak, linkedin_url, created_at)
+  on profiles to anon, authenticated;
 
 create or replace function public.list_members()
 returns setof profiles as $$

@@ -18,16 +18,7 @@ export default function SignupPage() {
   }
 
   function handlePhotoSelect(e) {
-    const file = e.target.files?.[0];
-    if (!file) { setPhotoFile(null); return; }
-    if (file.size > 5 * 1024 * 1024) {
-      setError("That photo is over 5MB. Please choose a smaller file.");
-      e.target.value = "";
-      setPhotoFile(null);
-      return;
-    }
-    setError("");
-    setPhotoFile(file);
+    setPhotoFile(e.target.files?.[0] || null);
   }
 
   async function handleSubmit(e) {
