@@ -157,7 +157,9 @@ export default function ReviewQueuePage() {
                         <span className="text-[10.5px] font-mono uppercase tracking-wide bg-charcoal/[0.08] text-charcoal-soft px-2.5 py-1 rounded">{categoryLabel(a.category_id)}</span>
                       </div>
                       <div className="font-semibold text-base mt-2">{a.title}</div>
-                      <div className="text-[12.5px] text-charcoal-soft mt-1">By {a.profiles?.name}</div>
+                      <div className="text-[12.5px] text-charcoal-soft mt-1">
+                        By {a.profiles?.name} · Submitted {new Date(a.created_at).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+                      </div>
                     </div>
                     <div className="flex gap-2 flex-wrap">
                       <button className="btn-ghost inline-flex items-center gap-1.5" onClick={() => startEdit(a)}>
