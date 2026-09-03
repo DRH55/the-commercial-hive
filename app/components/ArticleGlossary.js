@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { BookOpen, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
@@ -77,6 +78,10 @@ export default function ArticleGlossary({ articleId, canEdit }) {
             </button>
           )
         )}
+
+        <Link href="/glossary" className="text-amber text-[11.5px] font-semibold mt-4 inline-block">
+          See the full glossary →
+        </Link>
       </div>
     </div>
   );
