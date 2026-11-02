@@ -53,7 +53,13 @@ export default function CertificatePage() {
   const issuedOn = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
   return (
-    <section className="max-w-[900px] mx-auto px-6 py-16">
+    <section className="max-w-[1050px] mx-auto px-6 py-16 print:p-0 print:max-w-none">
+      <style>{`
+        @media print {
+          @page { size: A4 landscape; margin: 0; }
+        }
+      `}</style>
+
       <div className="flex justify-between items-center mb-8 print:hidden">
         <Link href="/profile" className="text-sm font-semibold text-charcoal-soft">&larr; Back to My Hive</Link>
         <button className="btn-primary inline-flex items-center gap-1.5" onClick={() => window.print()}>
@@ -62,23 +68,28 @@ export default function CertificatePage() {
       </div>
 
       <div
-        className="relative bg-cream border-[3px] border-amber px-10 py-14 sm:px-16 sm:py-16 text-center print:border-2"
-        style={{ boxShadow: "0 0 0 8px #fff, 0 0 0 9px rgba(198,117,43,0.25)" }}
+        className="relative bg-cream border-[3px] border-amber flex flex-col items-center justify-center text-center print:border-2 print:w-[297mm] print:h-[210mm]"
+        style={{
+          aspectRatio: "297 / 210",
+          width: "100%",
+          padding: "5% 8%",
+          boxShadow: "0 0 0 8px #fff, 0 0 0 9px rgba(198,117,43,0.25)",
+        }}
       >
-        <div className="absolute top-6 left-6 w-10 h-10 border-t-2 border-l-2 border-amber opacity-60" />
-        <div className="absolute top-6 right-6 w-10 h-10 border-t-2 border-r-2 border-amber opacity-60" />
-        <div className="absolute bottom-6 left-6 w-10 h-10 border-b-2 border-l-2 border-amber opacity-60" />
-        <div className="absolute bottom-6 right-6 w-10 h-10 border-b-2 border-r-2 border-amber opacity-60" />
+        <div className="absolute top-6 left-6 w-10 h-10 border-t-2 border-l-2 border-amber opacity-60 print:top-8 print:left-8" />
+        <div className="absolute top-6 right-6 w-10 h-10 border-t-2 border-r-2 border-amber opacity-60 print:top-8 print:right-8" />
+        <div className="absolute bottom-6 left-6 w-10 h-10 border-b-2 border-l-2 border-amber opacity-60 print:bottom-8 print:left-8" />
+        <div className="absolute bottom-6 right-6 w-10 h-10 border-b-2 border-r-2 border-amber opacity-60 print:bottom-8 print:right-8" />
 
         <div className="flex items-center justify-center gap-2.5">
-          <Image src="/logo.png" alt="The Commercial Hive" width={36} height={36} />
-          <span className="font-display font-semibold text-lg tracking-wide">THE COMMERCIAL <span className="text-amber">HIVE</span></span>
+          <Image src="/logo.png" alt="The Commercial Hive" width={40} height={40} />
+          <span className="font-display font-semibold text-xl tracking-wide">THE COMMERCIAL <span className="text-amber">HIVE</span></span>
         </div>
 
-        <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-amber font-medium mt-8">Certificate of Contribution</div>
-        <h1 className="text-[15px] text-charcoal-soft mt-4">This certifies that</h1>
-        <h2 className="font-display text-[clamp(32px,5vw,52px)] font-semibold mt-2 leading-tight">{profile.name}</h2>
-        <p className="text-[15.5px] text-charcoal-soft mt-4 max-w-[560px] mx-auto leading-relaxed">
+        <div className="text-[12px] font-mono uppercase tracking-[0.2em] text-amber font-medium mt-8">Certificate of Contribution</div>
+        <h1 className="text-base text-charcoal-soft mt-4">This certifies that</h1>
+        <h2 className="font-display text-[clamp(34px,4.2vw,54px)] font-semibold mt-2 leading-tight">{profile.name}</h2>
+        <p className="text-base text-charcoal-soft mt-4 max-w-[640px] leading-relaxed">
           has served as a <strong className="text-charcoal">{profile.contributor_tier}</strong> at The Commercial Hive,
           contributing original commercial analysis{sectors.length > 0 && " in "}
           {sectors.length > 0 && <strong className="text-charcoal">{sectors.join(", ")}</strong>}.
@@ -86,13 +97,13 @@ export default function CertificatePage() {
           and a demonstrated commitment to developing commercial awareness.
         </p>
 
-        <div className="flex items-center justify-center gap-10 mt-10">
+        <div className="flex items-center justify-center gap-14 mt-10">
           <div className="text-center">
-            <div className="font-display italic text-lg border-b border-charcoal-soft/40 pb-1.5 px-4">The Commercial Hive</div>
+            <div className="font-display italic text-lg border-b border-charcoal-soft/40 pb-1.5 px-6">The Commercial Hive</div>
             <div className="text-[11px] text-charcoal-soft mt-1.5 uppercase tracking-wide">Editorial Team</div>
           </div>
           <div className="text-center">
-            <div className="font-display text-lg border-b border-charcoal-soft/40 pb-1.5 px-4">{issuedOn}</div>
+            <div className="font-display text-lg border-b border-charcoal-soft/40 pb-1.5 px-6">{issuedOn}</div>
             <div className="text-[11px] text-charcoal-soft mt-1.5 uppercase tracking-wide">Date Issued</div>
           </div>
         </div>
