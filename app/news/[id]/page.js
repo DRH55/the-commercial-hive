@@ -57,7 +57,7 @@ export default function ArticlePage() {
       <h1 className="text-[clamp(26px,4vw,38px)] max-w-[760px] leading-tight mt-3.5">{article.title}</h1>
       <div className="flex items-center gap-4 mt-3">
         <p className="text-[12.5px] text-charcoal-soft">By {article.profiles?.name} · {new Date(article.published_at).toLocaleDateString()}</p>
-        <LikeButton table="article_likes" column="article_id" targetId={article.id} authorId={article.author_id} notifyType="article" contentTitle={article.title} />
+        <LikeButton table="article_likes" column="article_id" targetId={article.id} />
       </div>
       <p className="mt-5 text-[16.5px] text-charcoal-soft italic max-w-[640px] leading-relaxed">{article.excerpt}</p>
 

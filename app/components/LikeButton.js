@@ -6,10 +6,8 @@ import { useAuth } from "./AuthProvider";
 
 // table: "article_likes" | "reply_likes"
 // column: "article_id" | "reply_id"
-// authorId: profile id of the content's author, used to notify them of the like
-// notifyType: "article" | "reply"
-export default function LikeButton({ table, column, targetId, authorId, notifyType, contentTitle }) {
-  const { user, profile } = useAuth();
+export default function LikeButton({ table, column, targetId }) {
+  const { user } = useAuth();
   const [count, setCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [likeId, setLikeId] = useState(null);
@@ -37,13 +35,6 @@ export default function LikeButton({ table, column, targetId, authorId, notifyTy
       setCount((c) => c + 1);
       setLiked(true);
       setLikeId(data?.id || null);
-      if (authorId && authorId !== user.id) {
-        fetch("/api/notify-like", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ authorId, likerName: profile?.name, type: notifyType, title: contentTitle }),
-        }).catch(() => {});
-      }
     }
     setBusy(false);
   }

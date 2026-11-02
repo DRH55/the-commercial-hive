@@ -15,6 +15,11 @@ const TIERS = [
   { name: "Weekly Contributor", desc: "8 published articles, unlocks a certificate" },
 ];
 
+export const metadata = {
+  title: "Badges and tiers",
+  description: "How badges and contributor tiers are earned on The Commercial Hive.",
+};
+
 export default function BadgesPage() {
   return (
     <section className="max-w-[860px] mx-auto px-6 py-16">

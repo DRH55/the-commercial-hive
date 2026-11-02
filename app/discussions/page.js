@@ -111,7 +111,7 @@ export default function DiscussionsPage() {
                   <div className="text-[12.5px] font-semibold">{r.profiles?.name}</div>
                   <div className="text-[13.5px] text-charcoal-soft mt-1">{r.body}</div>
                   <div className="mt-1.5">
-                    <LikeButton table="reply_likes" column="reply_id" targetId={r.id} authorId={r.author_id} notifyType="reply" />
+                    <LikeButton table="reply_likes" column="reply_id" targetId={r.id} />
                   </div>
                 </div>
                 {isEditor && (

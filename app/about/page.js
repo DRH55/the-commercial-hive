@@ -7,6 +7,11 @@ const TIER_GUIDE = [
   { tier: "Weekly Contributor", earned: "8 published articles", listAs: "Weekly Contributor, The Commercial Hive" },
 ];
 
+export const metadata = {
+  title: "About",
+  description: "Why students put The Commercial Hive on their CV, and exactly how to list it.",
+};
+
 export default function AboutPage() {
   return (
     <section className="max-w-[860px] mx-auto px-6 py-16">

@@ -79,6 +79,10 @@ export default function SignupPage() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button className="btn-primary justify-center" disabled={loading}>{loading ? "Creating…" : "Create profile"}</button>
+        <p className="text-[12px] text-charcoal-soft leading-relaxed">
+          By creating a profile you agree to our <Link href="/terms" className="text-amber font-semibold">Terms of Use</Link> and{" "}
+          <Link href="/privacy" className="text-amber font-semibold">Privacy Policy</Link>.
+        </p>
       </form>
 
       <p className="text-sm text-charcoal-soft mt-5">
