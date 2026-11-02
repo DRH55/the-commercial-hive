@@ -18,11 +18,13 @@ export default function ArticlePage() {
   const { user, profile } = useAuth();
   const [article, setArticle] = useState(null);
   const [related, setRelated] = useState([]);
+  const [missing, setMissing] = useState(false);
 
   useEffect(() => {
     supabase.from("articles").select("*, profiles(name)").eq("slug", slug).single()
       .then(async ({ data }) => {
         setArticle(data);
+        setMissing(!data);
         if (data) {
           const { data: relatedData } = await supabase.from("articles").select("*")
             .eq("category_id", data.category_id).eq("status", "published").neq("id", data.id).limit(3);
@@ -30,6 +32,16 @@ export default function ArticlePage() {
         }
       });
   }, [slug]);
+
+  if (missing) {
+    return (
+      <div className="max-w-[560px] mx-auto px-6 py-20 text-center">
+        <h1 className="text-2xl font-semibold">This article is no longer available</h1>
+        <p className="text-charcoal-soft mt-3">It may have been removed, or the link may be wrong.</p>
+        <Link href="/news" className="btn-primary inline-flex mt-5">Back to Commercial News</Link>
+      </div>
+    );
+  }
 
   if (!article) return <div className="max-w-[700px] mx-auto px-6 py-16 text-charcoal-soft">Loading…</div>;
 

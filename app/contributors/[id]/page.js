@@ -13,16 +13,27 @@ export default function ContributorProfilePage() {
   const [articles, setArticles] = useState([]);
   const [responses, setResponses] = useState([]);
   const [replies, setReplies] = useState([]);
+  const [missing, setMissing] = useState(false);
 
   useEffect(() => {
     supabase.from("profiles")
       .select("id, name, photo_url, university, course, bio, goals, site_role, contributor_tier, streak, linkedin_url, created_at")
-      .eq("id", id).single().then(({ data }) => setProfile(data));
+      .eq("id", id).single().then(({ data }) => { setProfile(data); setMissing(!data); });
     supabase.from("articles").select("*").eq("author_id", id).eq("status", "published").then(({ data }) => setArticles(data || []));
     supabase.from("challenge_responses").select("*, challenges(category_id)").eq("user_id", id).then(({ data }) =>
       setResponses((data || []).map((r) => ({ ...r, category_id: r.challenges?.category_id }))));
     supabase.from("discussion_replies").select("*").eq("author_id", id).then(({ data }) => setReplies(data || []));
   }, [id]);
+
+  if (missing) {
+    return (
+      <div className="max-w-[560px] mx-auto px-6 py-20 text-center">
+        <h1 className="text-2xl font-semibold">This profile is no longer available</h1>
+        <p className="text-charcoal-soft mt-3">The member may have deleted their profile, or the link may be wrong.</p>
+        <Link href="/contributors" className="btn-primary inline-flex mt-5">Browse contributors</Link>
+      </div>
+    );
+  }
 
   if (!profile) return <div className="max-w-[700px] mx-auto px-6 py-16 text-charcoal-soft">Loading…</div>;
 

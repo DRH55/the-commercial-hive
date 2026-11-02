@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { LogIn, Printer, Share2, Award } from "lucide-react";
+import { LogIn, Printer, Share2, Award, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { BADGES, EDITOR_BADGE, computeEarnedBadges, externalUrl } from "@/lib/data";
 import { useAuth } from "../components/AuthProvider";
@@ -13,6 +13,10 @@ export default function ProfilePage() {
   const [activity, setActivity] = useState({ articles: [], responses: [], replies: [], applications: [] });
   const [saving, setSaving] = useState(false);
   const [photoError, setPhotoError] = useState("");
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     if (profile) setForm(profile);
@@ -53,6 +57,50 @@ export default function ProfilePage() {
     } else {
       setPhotoError("Something went wrong uploading that photo. Please try again.");
     }
+  }
+
+  function cancelDelete() {
+    setDeleteOpen(false);
+    setDeleteConfirm("");
+    setDeleteError("");
+  }
+
+  async function handleDeleteProfile() {
+    setDeleting(true);
+    setDeleteError("");
+
+    // The database also refuses this, but check first so we don't remove their
+    // photo and then fail.
+    if (profile?.site_role === "editor") {
+      const { count } = await supabase.from("profiles").select("id", { count: "exact", head: true }).eq("site_role", "editor");
+      if ((count || 0) <= 1) {
+        setDeleteError("You are the only editor. Make another member an editor before deleting your profile.");
+        setDeleting(false);
+        return;
+      }
+    }
+
+    // Supabase doesn't clear storage when a user is deleted, so remove their photos first.
+    const { data: files } = await supabase.storage.from("avatars").list(user.id);
+    if (files?.length) {
+      const paths = files.map((f) => `${user.id}/${f.name}`);
+      const { data: removed, error: removeError } = await supabase.storage.from("avatars").remove(paths);
+      if (removeError || (removed?.length || 0) < paths.length) {
+        setDeleteError("We couldn't remove your profile photo, so nothing has been deleted. Please try again.");
+        setDeleting(false);
+        return;
+      }
+    }
+
+    const { error } = await supabase.rpc("delete_my_account");
+    if (error) {
+      setDeleteError(error.message);
+      setDeleting(false);
+      return;
+    }
+
+    await supabase.auth.signOut();
+    window.location.href = "/";
   }
 
   if (loading) return <div className="max-w-[700px] mx-auto px-6 py-16 text-charcoal-soft">Loading…</div>;
@@ -190,6 +238,48 @@ export default function ProfilePage() {
       </div>
 
       <button className="btn-ghost mt-8 print:hidden" onClick={() => supabase.auth.signOut()}>Sign out</button>
+
+      <div className="mt-14 pt-8 border-t border-line max-w-[700px] print:hidden">
+        <div className="text-[11px] font-mono uppercase tracking-widest text-red-600 font-medium">Delete profile</div>
+        {!deleteOpen ? (
+          <>
+            <p className="text-[13.5px] text-charcoal-soft mt-2 max-w-[560px]">
+              Permanently remove your profile and everything you've added to The Commercial Hive.
+            </p>
+            <button className="btn-ghost mt-3 inline-flex items-center gap-1.5 text-red-600 border-red-300" onClick={() => setDeleteOpen(true)}>
+              <Trash2 size={13} /> Delete my profile
+            </button>
+          </>
+        ) : (
+          <div className="card mt-3 max-w-[560px] border-red-300">
+            <h3 className="text-[17px] font-semibold">Delete your profile permanently?</h3>
+            <p className="text-[13.5px] text-charcoal-soft mt-2">This will remove:</p>
+            <ul className="list-disc pl-5 mt-2 flex flex-col gap-1 text-[13.5px] text-charcoal-soft">
+              <li>Your profile, photo and login</li>
+              <li>Every article you've published or submitted, which will disappear from the site</li>
+              <li>Discussions you started, including other people's replies in them, and your own replies</li>
+              <li>Your challenge responses, likes and badges, plus any contributor tier or certificate</li>
+            </ul>
+            <p className="text-[13.5px] font-semibold mt-3">This can't be undone.</p>
+
+            <label className="text-xs font-semibold text-charcoal-soft block mt-4 mb-1.5">Type DELETE to confirm</label>
+            <input className="field-input" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} autoComplete="off" />
+
+            {deleteError && <p className="text-sm text-red-600 mt-3">{deleteError}</p>}
+
+            <div className="flex gap-2 mt-4">
+              <button
+                className="inline-flex items-center gap-1.5 rounded-[3px] bg-red-600 px-[18px] py-[9px] text-[13px] font-semibold text-white hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={deleteConfirm !== "DELETE" || deleting}
+                onClick={handleDeleteProfile}
+              >
+                {deleting ? "Deleting…" : "Delete permanently"}
+              </button>
+              <button className="btn-ghost" onClick={cancelDelete} disabled={deleting}>Cancel</button>
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
