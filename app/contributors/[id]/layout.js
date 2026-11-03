@@ -11,13 +11,13 @@ export async function generateMetadata({ params }) {
     // Member profiles are public to anyone with the link, but we ask search
     // engines not to list them. Link previews (LinkedIn etc.) still work.
     const robots = { index: false, follow: true };
-    if (!data) return { title: "Profile", robots };
+    if (!data) return { title: { absolute: "Profile | The Commercial Hive" }, robots };
 
     const role = data.site_role === "editor" ? "Editor" : data.contributor_tier || "Member";
     const bio = (data.bio || "").replace(/\s+/g, " ").trim();
     const description = `${role} at The Commercial Hive.${bio ? ` ${bio}` : ""}`.slice(0, 200);
     return {
-      title: data.name,
+      title: { absolute: `${data.name} | The Commercial Hive` },
       description,
       robots,
       openGraph: {

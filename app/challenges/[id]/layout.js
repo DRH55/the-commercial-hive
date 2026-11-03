@@ -7,11 +7,11 @@ export async function generateMetadata({ params }) {
       .select("title, scenario")
       .eq("id", params.id)
       .maybeSingle();
-    if (!data) return { title: "Challenge" };
+    if (!data) return { title: { absolute: "Challenge | The Commercial Hive" } };
 
     const description = (data.scenario || "").replace(/\s+/g, " ").trim().slice(0, 200);
     return {
-      title: data.title,
+      title: { absolute: `${data.title} | The Commercial Hive` },
       description,
       alternates: { canonical: `/challenges/${params.id}` },
       openGraph: {

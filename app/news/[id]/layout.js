@@ -10,12 +10,12 @@ export async function generateMetadata({ params }) {
       .maybeSingle();
 
     // Unpublished or unknown: the page itself still handles who may see it.
-    if (!data) return { title: "Article", robots: { index: false, follow: false } };
+    if (!data) return { title: { absolute: "Article | The Commercial Hive" }, robots: { index: false, follow: false } };
 
     const description = (data.excerpt || "").replace(/\s+/g, " ").trim().slice(0, 200);
     const author = data.profiles?.name;
     return {
-      title: data.title,
+      title: { absolute: `${data.title} | The Commercial Hive` },
       description,
       alternates: { canonical: `/news/${params.id}` },
       openGraph: {
